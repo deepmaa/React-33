@@ -48,10 +48,10 @@ class HttpService {
     try {
       if (config) {
         this.setConfig(config)
-        const response = await axiosInstance.post(url, data, this,config)
-        console.log("Success", response)
-        return response
       }
+      const response = await axiosInstance.post(url, data, this.config)
+      console.log("Success", response)
+      return response
     } catch (exeption) {
       console.log("postRequest", exeption)
       throw exeption

@@ -1,7 +1,8 @@
 import axios from "axios";
 
+// console.log(import.meta.env.)
 const axiosInstance = axios.create({
-	baseURL: import.meta.env.VITA_BASE_URL,
+	baseURL: import.meta.env.VITE_BASE_URL,
 	timeout: 30000,
 	timeoutErrorMessage: "Server Timed out ...",
 	responseType: "json",

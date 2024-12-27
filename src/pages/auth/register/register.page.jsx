@@ -31,7 +31,7 @@ export const RegisterPage = () => {
 			)
 			.required(),
 		confirmPassword: Yup.string().oneOf([Yup.ref("password")]).required(),
-		gender: Yup.string().matches(/^(Male|Female|Other)$/).required(),
+		gender: Yup.string().matches(/^(male|female|other)$/).required(),
 		role: Yup.string().matches(/^(customer|seller)$/).required("Role required"),
 		phone: Yup.string().matches(/^(?:\+977[- ]?)?(98\d{8}|97\d{8}|96\d{8}|0[1-6][- ]?\d{6,7})$/, { message: "Phone number should start with 98 or .." }).required(),
 		address: Yup.string().nullable().optional().default(null),
@@ -52,19 +52,21 @@ export const RegisterPage = () => {
 
 	const submitEvent = async (data) => {
 		try {
+			console.log({data})
 			setLoading(true);
 			const result = await authSvc.registerUser(data);
 			console.log(result.data.message);
-			setOptModal(true)
+			setOtpModal(true)
 		} catch (exception) {
+			setLoading(false);
 			let errData = exception?.data?.data || null;
 			if (errData) {
 				Object.keys(errData).map((key) => {
-					setError(key, { message: errData(key) });
+					setError(key, { message: errData[key] });
 				});
 			}
-			console.log(exception.data.message);
-			setLoading(false);
+			console.log(exception.data);
+			
 		}
 	};
 
@@ -150,9 +152,9 @@ export const RegisterPage = () => {
 									<div className="flex gap-6">
 										<RadioInputField
 											options={[
-												{ label: "Male", value: "Male" },
-												{ label: "Female", value: "Female" },
-												{ label: "Other", value: "Other" },
+												{ label: "Male", value: "male" },
+												{ label: "Female", value: "female" },
+												{ label: "Other", value: "other" },
 											]}
 											name="gender"
 											control={control}

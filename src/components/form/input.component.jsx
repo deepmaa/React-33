@@ -171,7 +171,6 @@ export const FileUploadField = ({
 		name: name,
 	});
 
-	console.log(value);
 	return (
 		<>
 			<div className="flex">
