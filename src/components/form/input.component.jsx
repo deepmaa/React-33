@@ -171,7 +171,6 @@ export const FileUploadField = ({
 		name: name,
 	});
 
-	console.log(value);
 	return (
 		<>
 			<div className="flex">
@@ -204,6 +203,14 @@ export const FileUploadField = ({
 						type="file"
 						accept="image/*"
 					/>
+
+					{errMsg ? (
+						<>
+							<div className="text-red-500 text-xs pt-2">{errMsg}</div>
+						</>
+					) : (
+						<></>
+					)}
 				</div>
 				<div className={`${isMultiple ? "w-full" : "w-1/4"}`}>
 					{Array.isArray(value) ? (
@@ -220,19 +227,13 @@ export const FileUploadField = ({
 						</div>
 					) : (
 						<>
-							<img src={value ? URL.createObjectURL(value) : ""} alt="" />
+							<img src={value ? URL.createObjectURL(value) : "https://archive.org/download/placeholder-image/placeholder-image.jpg"} alt="" />
 						</>
 					)}
 				</div>
 			</div>
 
-			{errMsg ? (
-				<>
-					<div className="text-red-500 text-xs pt-2">{errMsg}</div>
-				</>
-			) : (
-				<></>
-			)}
+
 		</>
 	);
 };

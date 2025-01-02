@@ -1,0 +1,23 @@
+{
+    "data": {
+        "name": "Test Name",
+        "email": "sandesh.bhattarai79+99119@gmail.com",
+        "password": "$2a$10$3BtrWK5J/PHKcM45nklWDuz6coBxikgybDcz8LPLclzMKJjomjel2",
+        "role": "customer",
+        "gender": "male",
+        "address": "Kathmandu",
+        "telephone": "9802111635",
+        "image": "http://res.cloudinary.com/diijizcvp/image/upload/v1735699255/users/jus1yculflvth4whimnu.svg",
+        "status": "inactive",
+        "activationToken": "93L1GQ",
+        "expiryTime": "2025-01-01T02:45:56.592Z",
+        "createdBy": null,
+        "_id": "6774ab38a96764c1538be7ac",
+        "createdAt": "2025-01-01T02:40:56.608Z",
+        "updatedAt": "2025-01-01T02:40:56.608Z",
+        "__v": 0
+    },
+    "message": "Register Request",
+    "status": "SUCCESS_OK",
+    "options": null
+}

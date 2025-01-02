@@ -1,15 +1,17 @@
 import { BrowserRouter, Route, RouterProvider, Routes, createBrowserRouter } from "react-router-dom";
 import { LandingPage } from "../pages/landing";
 import { AboutUs } from "../pages/about-us/about-us.page";
-import { AllPorductGrid } from "../pages/products/all-products.page";
+import {AllPorductCards} from "../pages/products/all-products.page";
 import { PrivacyPolicy } from "../pages/privacy/privacy.page";
-import { LoginPage } from "../pages/auth/login/login.page";
 import { HomeLayout } from "../layouts/home-layout";
-import { RegisterPage } from "../pages/auth/register/register.page";
+// import { LoginPage } from "../pages/auth/login/login.page";
+// import { RegisterPage } from "../pages/auth/register/register.page";
 import { UserLayout } from "../layouts/user-layout";
 import { CategoryWiseProductList } from "../pages/category/category-product-list";
 import { ErrorPage } from "../pages/not-found/404.page";
 import { AdminDashboarad } from "../pages/dashboard/admindashboard.page";
+import Auth from "../pages/auth";
+import { ToastContainer } from "react-toastify";
 
 
 const router = createBrowserRouter([
@@ -27,7 +29,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "products",
-				element: <AllPorductGrid />
+				element: <AllPorductCards />
 			},
 			{
 				path: "privacy-policy",
@@ -39,11 +41,11 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "login",
-				element: <LoginPage />
+				element: <Auth.LoginPage />
 			},
 			{
 				path: "register",
-				element: <RegisterPage />
+				element: <Auth.RegisterPage />
 			},
 			{
 				path: "*",
@@ -69,7 +71,13 @@ const router = createBrowserRouter([
 
 
 const Routing = () => {
-	return (<RouterProvider router={router} />
+	return (
+		<>
+			<ToastContainer className="text-xs"
+				theme="colored"
+			/>
+			<RouterProvider router={router} />
+		</>
 	)
 }
 

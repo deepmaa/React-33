@@ -1,13 +1,13 @@
-import { HomeCarousel } from "../../components/homecarousel.component"
-import { ProductGrid } from "../../components/product-categories"
-import { ProductLIst } from "../../components/product.list"
+import { HomeCarousel } from "../../components/homecarousel/homecarousel.component"
+import { ProductCategory } from "../../components/product/product-categories.component"
+import { ProductCard } from "../../components/product/product.card.component"
 
 export const LandingPage = () => {
   return (
     <>
     <HomeCarousel></HomeCarousel>
-    <ProductGrid></ProductGrid>
-    <ProductLIst></ProductLIst>
+    <ProductCategory></ProductCategory>
+    <ProductCard></ProductCard>
     </>
   )
 }

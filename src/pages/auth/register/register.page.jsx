@@ -12,14 +12,16 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import authSvc from "../auth.servive";
 import { useState } from "react";
-import { Modal, Button } from "flowbite-react";
+import { toast } from "react-toastify";
+import { OTPModal } from "../../../components/otp-modal/otp-modal.component";
+import { Link } from "react-router-dom";
 
 export const RegisterPage = () => {
 
 	const [otpModal, setOtpModal] = useState(false);
 
 	const userRegisterDTO = Yup.object({
-		name: Yup.string().min(2).max(25).required(),
+		fullName: Yup.string().min(2, 'Enter your name').max(25),
 		email: Yup.string().email().required("Email required"),
 		password: Yup.string()
 			.matches(
@@ -30,12 +32,12 @@ export const RegisterPage = () => {
 				}
 			)
 			.required(),
-		confirmPassword: Yup.string().oneOf([Yup.ref("password")]).required(),
-		gender: Yup.string().matches(/^(Male|Female|Other)$/).required(),
+		passwordConfirmation: Yup.string().oneOf([Yup.ref("password")]).required(),
+		gender: Yup.string().matches(/^(male|female|other)$/).required(),
 		role: Yup.string().matches(/^(customer|seller)$/).required("Role required"),
-		phone: Yup.string().matches(/^(?:\+977[- ]?)?(98\d{8}|97\d{8}|96\d{8}|0[1-6][- ]?\d{6,7})$/, { message: "Phone number should start with 98 or .." }).required(),
+		telephone: Yup.string().matches(/^(?:\+977[- ]?)?(98\d{8}|97\d{8}|96\d{8}|0[1-6][- ]?\d{6,7})$/, { message: "Phone number should start with 98 or .." }).required(),
 		address: Yup.string().nullable().optional().default(null),
-		image: Yup.mixed().required("Image required"),
+		profileImage: Yup.mixed().required("Image required"),
 	});
 
 	const [loading, setLoading] = useState(false);
@@ -52,19 +54,21 @@ export const RegisterPage = () => {
 
 	const submitEvent = async (data) => {
 		try {
+			console.log({data})
 			setLoading(true);
 			const result = await authSvc.registerUser(data);
 			console.log(result.data.message);
-			setOptModal(true)
+			setOtpModal(true)
+			toast.success("Your account has been created. Please use the OTP code provided on your email");
 		} catch (exception) {
+			setLoading(false);
 			let errData = exception?.data?.data || null;
 			if (errData) {
 				Object.keys(errData).map((key) => {
-					setError(key, { message: errData(key) });
+					setError(key, { message: errData[key] });
 				});
 			}
-			console.log(exception.data.message);
-			setLoading(false);
+			console.log(exception.data);
 		}
 	};
 
@@ -72,8 +76,8 @@ export const RegisterPage = () => {
 		<>
 			<section className="bg-gray-50 dark:bg-gray-900">
 				<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
-					<a
-						href="#"
+					<Link
+						to="/"
 						className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
 					>
 						<img
@@ -82,7 +86,7 @@ export const RegisterPage = () => {
 							alt="logo"
 						/>
 						Flowbite
-					</a>
+					</Link>
 					<div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
 						<div className="p-6 space-y-4 md:space-y-6 sm:p-8">
 							<h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -98,16 +102,16 @@ export const RegisterPage = () => {
 									<InputLabel field={"name"} labelText={"Name"} />
 									<TextInputField
 										control={control}
-										name={"name"}
+										name={"fullName"}
 										type="text"
 										placeholder="Enter your name"
-										errMsg={errors?.name?.message}
+										errMsg={errors?.fullName?.message}
 									/>
 								</div>
 
 								{/* Email */}
 								<div>
-									<InputLabel field={"name"} labelText={"Email"} />
+									<InputLabel field={"email"} labelText={"Email"} />
 									<TextInputField
 										control={control}
 										name={"email"}
@@ -132,27 +136,27 @@ export const RegisterPage = () => {
 								{/* Confirm Password */}
 								<div>
 									<InputLabel
-										field={"confirmPassword"}
+										field={"passwordConfirmation"}
 										labelText={"Confirm Password"}
 									/>
 									<TextInputField
 										control={control}
-										name={"confirmPassword"}
+										name={"passwordConfirmation"}
 										type="password"
 										placeholder="Re-enter your password"
-										errMsg={errors?.confirmPassword?.message}
+										errMsg={errors?.passwordConfirmation?.message}
 									/>
 								</div>
 
 								{/* Gender */}
 								<div>
 									<InputLabel field={"gender"} labelText={"Gender"} />
-									<div className="flex gap-6">
+									<div className="flex gap-6 capitalize">
 										<RadioInputField
 											options={[
-												{ label: "Male", value: "Male" },
-												{ label: "Female", value: "Female" },
-												{ label: "Other", value: "Other" },
+												{ label: "Male", value: "male" },
+												{ label: "Female", value: "female" },
+												{ label: "Other", value: "other" },
 											]}
 											name="gender"
 											control={control}
@@ -177,13 +181,13 @@ export const RegisterPage = () => {
 
 								{/* Phone */}
 								<div>
-									<InputLabel field={"phone"} labelText={"Phone"} />
+									<InputLabel field={"telephone"} labelText={"Phone"} />
 									<TextInputField
 										control={control}
-										name={"phone"}
+										name={"telephone"}
 										type="text"
 										placeholder="Re-enter your phone number"
-										errMsg={errors?.phone?.message}
+										errMsg={errors?.telephone?.message}
 									/>
 								</div>
 
@@ -199,12 +203,12 @@ export const RegisterPage = () => {
 
 								{/* Image Upload */}
 								<div>
-									<InputLabel field={"image"} labelTxt={"Image: "} />
+									<InputLabel field={"profileImage"} labelTxt={"Image: "} />
 									<FileUploadField
 										setError={setError}
 										control={control}
-										name={"image"}
-										errMsg={errors?.image?.message}
+										name={"profileImage"}
+										errMsg={errors?.profileImage?.message}
 									/>
 								</div>
 
@@ -216,28 +220,11 @@ export const RegisterPage = () => {
 				</div>
 			</section>
 
-			<Modal show={otpModal} onClose={() => setOtpModal(false)}>
-				<Modal.Header>Terms of Service</Modal.Header>
-				<Modal.Body>
-					<div className="space-y-6">
-						<p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-							With less than a month to go before the European Union enacts new consumer privacy laws for its citizens,
-							companies around the world are updating their terms of service agreements to comply.
-						</p>
-						<p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-							The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant
-							to ensure a common set of data rights in the European Union. It requires organizations to notify users as
-							soon as possible of high-risk data breaches that could personally affect them.
-						</p>
-					</div>
-				</Modal.Body>
-				<Modal.Footer>
-					<Button onClick={() => setOtpModal(false)}>I accept</Button>
-					<Button color="gray" onClick={() => setOtpModal(false)}>
-						Decline
-					</Button>
-				</Modal.Footer>
-			</Modal>
+			<OTPModal 
+				otpModal={otpModal}
+				email={getValues('email')}
+				setOtpModal={setOtpModal}
+			/>
 		</>
 	);
 };
